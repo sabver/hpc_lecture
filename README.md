@@ -1,3 +1,6 @@
+# my student id
+19M38171 
+
 # hpc_lecture
 
 |          | Topic                                | Sample code               |
