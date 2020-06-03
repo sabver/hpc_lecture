@@ -282,13 +282,13 @@ public:
         }
     }
 
-  void random() {
-    for (int j = 0; j < _n; j++) {
-      for (int i = 0; i < _m; i++) {
-        _h_data[i + j * _m] = drand48();
+    void random() {
+      for (int j = 0; j < _n; j++) {
+        for (int i = 0; i < _m; i++) {
+          _h_data[i + j * _m] = drand48();
+        }
       }
     }
-  }
 
 
     /**
