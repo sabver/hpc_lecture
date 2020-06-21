@@ -5,15 +5,16 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <math.h>
 
 using namespace std;
 int ny = 41; //row
 int nx = 41; //col
 int nt = 50;
-int c = 1;
+double nu = 0.01;
 float dx = 2.0 / (nx - 1);
 float dy = 2.0 / (ny - 1);
-float dt = dx * 0.2;
+float dt = dx * dy / nu * 0.25;
 
 vector< vector<double> > u(ny); //ny * nx
 
@@ -139,14 +140,23 @@ void set_value2( int row_start,int row_end,int col_start,int col_end,double valu
   }
 }
 
-void convection( vector< vector<double> > &u,vector< vector<double> > &u_old){
-//   printf("convection\n");
+void diffusion( vector< vector<double> > &u,vector< vector<double> > &u_old ){
   //u_old = u.copy()
   u_old.assign(u.begin(), u.end());
-  int row = ny,col = nx;
-  for(int j=1;j<row;j++){
-    for(int i=1;i<col;i++){
-      u[j][i] = (u_old[j][i] - (c * dt / dx * (u_old[j][i] - u_old[j][i - 1])) - (c * dt / dy * (u_old[j][i] - u_old[j - 1][i])));
+  int row = ny,col = nx;  
+  for(int j=1;j<row-1;j++){
+    for(int i=1;i<col-1;i++){
+      // u[1:-1, 1:-1] = (u_old[1:-1,1:-1] + 
+      //               nu * dt / dx**2 * (u_old[1:-1, 2:] - 2 * u_old[1:-1, 1:-1] + u_old[1:-1, 0:-2]) +
+      //               nu * dt / dy**2 * (u_old[2:,1: -1] - 2 * u_old[1:-1, 1:-1] + u_old[0:-2, 1:-1]))
+      // [j][i] -> [1:-1, 1:-1]    
+      // [j][i+1] -> [1:-1, 2:]          
+      // [j][i-1] -> [1:-1, 0:-2]
+      // [j+1][i] -> [2:,1:-1]
+      // [j-1][i] -> [0:-2, 1:-1]
+      u[j][i] = (u_old[j][i] + 
+                    nu * dt / pow(dx,2) * (u_old[j][i+1] - 2 * u_old[j][i] + u_old[j][i-1]) +
+                    nu * dt / pow(dy,2) * (u_old[j+1][i] - 2 * u_old[j][i] + u_old[j-1][i]));
       //u[0, :] = 1
       set_value2(0,0,0,col-1,1.0);
       //u[-1, :] = 1
@@ -156,7 +166,7 @@ void convection( vector< vector<double> > &u,vector< vector<double> > &u_old){
       //u[:, -1] = 1
       set_value2(0,row-1,col-1,col-1,1.0);
     }
-  }
+  }  
 }
 
 int main(){
@@ -170,7 +180,7 @@ int main(){
   vector< vector<double> > u_old(ny);
   vector<string> array_str(nt);
   for(int i=0;i<nt;i++){
-    convection(u,u_old);
+    diffusion(u,u_old);
     //save u's data    
     string result = array_2d_to_json(u,ny,nx);
     array_str[i] = result;
