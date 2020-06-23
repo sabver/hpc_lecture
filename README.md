@@ -1,6 +1,20 @@
 # my student id
 19M38171 
 
+# about final report
+
+## my final version code
+1. ***final_report*/cuda_cavity_one_block.cu**
+
+2. other code files in final_report almost are test codes or failure version codes.
+
+## how to verify my code's correctness 
+1. final_report/u_json.txt,final_report/v_json.txt,final_report/p_json.txt is the result of my code with parameter THREAD_NUM = 1024
+
+2. or you could run my code to get the file u_json.txt,v_json.txt and p_json.txt,but you should modify the path of output file in code's function write_string_to_file
+
+3. run final_report/cuda_cavity.py to see the picture with u_json.txt and v_json.txt and p_json
+
 # hpc_lecture
 
 |          | Topic                                | Sample code               |
