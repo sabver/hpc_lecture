@@ -301,4 +301,8 @@ int main(){
   cudaFree(u);
   cudaFree(v);
   cudaFree(p);
+  cudaFree(b);
+  cudaFree(un);
+  cudaFree(vn);
+  cudaFree(pn);
 }
